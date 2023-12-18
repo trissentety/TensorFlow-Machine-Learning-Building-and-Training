@@ -8,7 +8,6 @@ import tensorflow as tf
 import pandas as pd
 
 
-
 CSV_COLUMN_NAMES = ['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth', 'Species']
 SPECIES = ['Setosa', 'Versicolor', 'Virginica']
 # Lets define some constants to help us later on
@@ -35,6 +34,18 @@ def input_fn(features, labels, training=True, batch_size=256): #no epochs and ba
 my_feature_columns = []
 for key in train.keys(): #loop through keys in training data set, gives all columns
     my_feature_columns.append(tf.feature_column.numeric_column(key=key)) #equal to key looping through
-print(my_feature_columns)
-#[NumericColumn(key='SepalLength', shape=(1,), default_value=None, dtype=tf.float32, normalizer_fn=None), NumericColumn(key='SepalWidth', shape=(1,), default_value=None, dtype=tf.float32, normalizer_fn=None), NumericColumn(key='PetalLength', shape=(1,), default_value=None, dtype=tf.float32, normalizer_fn=None), NumericColumn(key='PetalWidth', shape=(1,), default_value=None, dtype=tf.float32, normalizer_fn=None)]
+
+# Build a DNN with 2 hidden layers with 30 and 10 hidden nodes each.
+classifier = tf.estimator.DNNClassifier(
+    feature_columns=my_feature_columns,
+    # Two hidden layers of 30 and 10 nodes respectively.
+    hidden_units=[30, 10],
+    # The model must choose between 3 classes.
+    n_classes=3)
+
+classifier.train(
+    input_fn=lambda: input_fn(train, train_y, training=True),
+    steps=5000) #go through data set until 5000 things have been looked at
+# We include a lambda to avoid creating an inner function previously
+
 
