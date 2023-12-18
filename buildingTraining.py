@@ -46,6 +46,5 @@ classifier = tf.estimator.DNNClassifier(
 classifier.train(
     input_fn=lambda: input_fn(train, train_y, training=True),
     steps=5000) #go through data set until 5000 things have been looked at
-# We include a lambda to avoid creating an inner function previously
 
 
